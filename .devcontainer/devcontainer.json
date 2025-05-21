@@ -1,0 +1,31 @@
+{
+    "name": "Godot Dev Container",
+    "dockerFile": "Dockerfile", // 或者使用预构建的镜像 "image": "..."
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-vscode-remote.remote-containers",
+          "geequlim.godot-tools" // Godot 官方或社区的 VS Code 插件
+          // 其他你可能需要的插件，例如 GitLens, Prettier 等
+        ]
+      }
+    },
+    "forwardPorts": [
+      // Godot 游戏运行时可能需要转发的端口，例如调试端口
+      // 6006, 23688
+    ],
+    "runArgs": [
+      "--cap-add=SYS_PTRACE", // 允许调试
+      "--security-opt", "seccomp=unconfined", // 某些情况下需要
+      "-e", "DISPLAY=192.168.0.138:0", // 使用特定IP地址设置DISPLAY
+      "-v", "/tmp/.X11-unix:/tmp/.X11-unix", // 挂载 X11 socket
+      // OrbStack 特定优化
+      "-e", "MESA_GL_VERSION_OVERRIDE=3.3", // 强制设置OpenGL版本为3.3
+      "-e", "MESA_GLSL_VERSION_OVERRIDE=330" // 强制设置GLSL版本为330
+    ],
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ],
+    "remoteUser": "vscode" // 或者你的 Dockerfile 中定义的用户
+  }
+  
